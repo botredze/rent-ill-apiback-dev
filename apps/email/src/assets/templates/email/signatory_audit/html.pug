@@ -1,0 +1,56 @@
+- var appLogo = process.env.APPLOGO || ''
+- var appName = process.env.APPNAME || ''
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title
+    style
+        include style.css
+body(style='margin:0; padding:0; background-color:#F2F2F2;')
+
+p Dear <b>#{fullName}</b>,
+
+p Below you can find all inputs filled by you:
+
+br
+
+div.container
+      table
+        thead
+          tr
+            th <h3>Field Name</h3>
+            th <h3>Field Type</h3>
+            th <h3>Value</h3>
+        each element in messages
+          tr
+            td #{element.fieldName}
+            td #{element.type}
+            td #{element.value}
+
+br
+embed(src=fileUrl, type='application/pdf', width='100%', height='500')
+p <h3>IF File didnt appear, please click button below</h3>
+a(href=fileUrl style='\
+  font-family: Arial;\
+  width: 176px; height: 48px; background: #409FFF; border-radius: 8px; \
+  text-align: center;\
+  letter-spacing: -0.01em;\
+  outline: none;\
+  text-decoration: none;\
+  color: #FFFFFF; display: block; line-height: 52px; \
+  margin: 32px 0;')
+  | Download File
+//- img(src=fileUrl alt=appName width="300" height="200")
+br
+
+
+div(style="display:flex;")
+  img(src=appLogo  alt=appName width="100" height="63" style="margin: 0; border: 0; padding-right: 10px; vertical-align:middle;")
+  span &copy; #{(new Date()).getFullYear()}&nbsp;
+  | The #{appName} #{supportPhone? `Support Team, phone: ${supportPhone}`:'Support Team'}
+

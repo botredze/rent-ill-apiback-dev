@@ -1,0 +1,82 @@
+- hosts: "{{ target }}"
+  gather_facts: no
+  tasks:
+    - name: Cleanup tmp folder {{ target }}
+      file:
+        state: absent
+        path: "{{ app_directory_tmp }}"
+
+    - name: Copy Files
+      synchronize:
+        src: "{{ playbook_dir }}/../."
+        dest: "{{ app_directory_tmp }}"
+        delete: yes
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.vscode"
+          - "--exclude=.idea"
+          - "--exclude=.github"
+          - "--exclude=.gitignore"
+          - "--exclude=.DS_Store"
+          # - "--exclude=node_modules"
+          - "--exclude=ansible"
+
+    # - name: Install packages
+    #   command: "npm ci"
+    #   args:
+    #     chdir: "{{ app_directory_tmp }}"
+
+    - name: Get timestamp from the system
+      shell: "date +%Y-%m-%d_%H:%M:%S"
+      register: tstamp
+      ignore_errors: true
+
+    - name: Create .deploy_stats
+      copy:
+        dest: "{{ app_directory_tmp }}/.deploy_stats"
+        content: |
+          DATE:           {{ tstamp.stdout[0:] }}
+          GITHUB_SHA:     {{ lookup('env','GITHUB_SHA') }}
+          GITHUB_REF:     {{ lookup('env','GITHUB_REF') }}
+          GITHUB_ACTOR:   {{ lookup('env','GITHUB_ACTOR') }}
+          GITHUB_ACTIONS: {{ lookup('env','GITHUB_ACTIONS') }}
+      ignore_errors: true
+
+    - stat:
+        path: "{{ app_directory }}"
+      register: p
+
+    - name: Cleanup previous backup folder
+      file:
+        state: absent
+        path: "{{ app_directory_bak }}"
+      when: p.stat.exists
+
+    - name: Backup current app
+      command: mv {{ app_directory }} {{ app_directory_bak }}/
+      when: p.stat.exists
+
+    - name: Update current app
+      command: mv {{ app_directory_tmp }} {{ app_directory }}/
+      when: p.stat.exists
+
+    # - name: Start Docker Compose
+    #   command: sudo docker-compose up --build -d
+    #   args:
+    #     chdir: "{{ app_directory }}"
+
+    # - name: Start mysql
+    #   command: "sudo systemctl start mysql.service"
+    #   args:
+    #     chdir: "{{ app_directory }}"
+
+    - name: Run migrations
+      command: "npm run migrate:latest"
+      args:
+        chdir: "{{ app_directory }}"
+
+    - name: Start app
+      command: "pm2 start {{ pm2_config_file }} --env pm2_env=staging"
+      args:
+        chdir: "{{ app_directory }}"

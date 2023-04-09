@@ -1,0 +1,24 @@
+{
+    "name": "pagination",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "libs/pagination/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/pagination/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/pagination"],
+            "options": {
+                "jestConfig": "libs/pagination/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

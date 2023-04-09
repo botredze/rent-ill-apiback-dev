@@ -1,0 +1,24 @@
+{
+    "name": "exceptions",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "libs/exceptions/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/exceptions/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/exceptions"],
+            "options": {
+                "jestConfig": "libs/exceptions/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

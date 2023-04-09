@@ -1,0 +1,67 @@
+name: PROD CI (NX-Apps)
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Npm CI
+        run: npm ci
+
+      - name: Nx Affected lint
+        run: npx nx affected --target=lint --parallel=7
+      - name: Nx Affected test
+        run: npm run test
+      - name: Nx Affected build
+        run: npx nx affected --target=build --parallel=7 --all
+
+      - name: Deployment Environment
+        run: |
+          echo "${{ secrets.PROD_ENV }}" > .env
+          cd ansible
+          echo "${{ secrets.PRODUCTION_SERVER_SSH_KEY }}" > id_rsa
+          chmod 400 id_rsa
+          ansible-playbook deploy.yml -i inventory --extra-vars "target=staging" --private-key=id_rsa
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
+
+  slackNotification:
+    needs: deploy
+    name: slack-notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: GitHubActions
+          SLACK_TITLE: Staging stack
+          SLACK_MESSAGE: Signy (PROD Backend) has been deployed
+
+  telegramNotification:
+    needs: deploy
+    name: telegram-notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Telegram notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_RENTIL_DEPLOY_GROUP_ID }}
+          token: ${{ secrets.TELEGRAM_RENTIL_DEPLOY_GROUP_TOKEN }}
+          format: Markdown
+          message: |
+            Signy (PROD Backend) has been deployed by ${{ github.actor }}
+            Commit: *${{ github.event.commits[0].message }}*
+            Commit Url: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+          photo: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png

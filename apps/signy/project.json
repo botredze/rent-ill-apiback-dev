@@ -1,0 +1,60 @@
+{
+    "name": "signy",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "apps/signy/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/node:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/signy",
+                "main": "apps/signy/src/main.ts",
+                "tsConfig": "apps/signy/tsconfig.app.json"
+            },
+            "configurations": {
+                "production": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/signy/src/environments/environment.ts",
+                            "with": "apps/signy/src/environments/environment.prod.ts"
+                        }
+                    ]
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/node:node",
+            "options": {
+                "buildTarget": "signy:build"
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/signy/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/apps/signy"],
+            "options": {
+                "jestConfig": "apps/signy/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "migrate-latest": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "ts-node --project tsconfig.app.json ../../node_modules/.bin/typeorm migration:run -f .env.local",
+                "cwd": "apps/game-api"
+            }
+        }
+    },
+    "tags": []
+}

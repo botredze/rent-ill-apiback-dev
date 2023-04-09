@@ -1,0 +1,72 @@
+{
+    "name": "drive",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "libs/drive/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/drive/**/*.ts"]
+            }
+        },
+        "migrate-latest": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex migrate:latest",
+                "cwd": "libs/drive"
+            }
+        },
+        "migrate-rollback": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex migrate:rollback",
+                "cwd": "libs/drive"
+            }
+        },
+        "migrate-make": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "cross-env NODE_ENV=make knex migrate:make -x ts {args.name}",
+                "cwd": "libs/drive"
+            }
+        },
+        "seed-run": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run",
+                "cwd": "libs/drive"
+            }
+        },
+        "seed-cities": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run --specific=seed_сities.ts",
+                "cwd": "libs/drive"
+            }
+        },
+        "seed-zipcodes": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run --specific=seed_zipсodes.ts",
+                "cwd": "libs/drive"
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/drive"],
+            "options": {
+                "jestConfig": "libs/drive/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

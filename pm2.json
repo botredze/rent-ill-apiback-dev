@@ -1,0 +1,76 @@
+{
+    "apps": [
+        {
+            "name": "gateway",
+            "script": "npm",
+            "args": "run start:gateway",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        },
+        {
+            "name": "users",
+            "script": "npm",
+            "args": "run start:users",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        },
+        {
+            "name": "otp",
+            "script": "npm",
+            "args": "run start:otp",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        },
+        {
+            "name": "email",
+            "script": "npm",
+            "args": "run start:email",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        },
+        {
+            "name": "company",
+            "script": "npm",
+            "args": "run start:company",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        },
+        {
+            "name": "signy",
+            "script": "npm",
+            "args": "run start:signy",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "env_staging": {
+                "NODE_ENV": "staging",
+                "NO_COLOR": "enable"
+            }
+        }
+    ]
+}

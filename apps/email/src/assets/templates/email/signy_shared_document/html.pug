@@ -1,0 +1,25 @@
+- var appLogo = process.env.APPLOGO || ''
+- var appName = process.env.APPNAME || ''
+p Dear #{fullName},
+
+p Document was shared with you!
+
+p Press button below to proceed:
+
+a(href=link style='\
+  font-family: Arial;\
+  width: 176px; height: 52px; background: #409FFF; border-radius: 8px; \
+  text-align: center;\
+  letter-spacing: -0.01em;\
+  outline: none;\
+  text-decoration: none;\
+  color: #FFFFFF; display: block; line-height: 52px; \
+  margin: 32px 0;')
+  | REDIRECT
+               
+p If you didn't request an email verification, please disregard this message.
+
+div(style="display:flex;")
+  img(src=appLogo  alt=appName width="100" height="63" style="margin: 0; border: 0; padding-right: 10px; vertical-align:middle;")
+  span &copy; #{(new Date()).getFullYear()}&nbsp;
+  | The #{appName} #{supportPhone? `Support Team, phone: ${supportPhone}`:'Support Team'}

@@ -1,0 +1,8 @@
+[staging]
+38.242.247.40 ansible_user=app-user pm2_env=staging
+
+[all:vars]
+app_directory=/var/www/app/nx-apps
+app_directory_tmp=/var/www/app/tmp/nx-apps
+app_directory_bak=/var/www/app/backups/nx-apps
+pm2_config_file=pm2.json

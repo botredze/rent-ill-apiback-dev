@@ -1,0 +1,72 @@
+{
+    "name": "db",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "libs/db/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/db/**/*.ts"]
+            }
+        },
+        "migrate-latest": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex migrate:latest",
+                "cwd": "libs/db"
+            }
+        },
+        "migrate-rollback": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex migrate:rollback",
+                "cwd": "libs/db"
+            }
+        },
+        "migrate-make": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "cross-env NODE_ENV=make knex migrate:make -x ts {args.name}",
+                "cwd": "libs/db"
+            }
+        },
+        "seed-run": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run",
+                "cwd": "libs/db"
+            }
+        },
+        "seed-cities": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run --specific=seed_сities.ts",
+                "cwd": "libs/db"
+            }
+        },
+        "seed-zipcodes": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "knex seed:run --specific=seed_zipсodes.ts",
+                "cwd": "libs/db"
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/db"],
+            "options": {
+                "jestConfig": "libs/db/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

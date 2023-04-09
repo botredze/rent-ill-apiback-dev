@@ -1,0 +1,60 @@
+{
+    "name": "otp",
+    "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
+    "sourceRoot": "apps/otp/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/node:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/otp",
+                "main": "apps/otp/src/main.ts",
+                "tsConfig": "apps/otp/tsconfig.app.json"
+            },
+            "configurations": {
+                "production": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/otp/src/environments/environment.ts",
+                            "with": "apps/otp/src/environments/environment.prod.ts"
+                        }
+                    ]
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/node:node",
+            "options": {
+                "buildTarget": "otp:build"
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/otp/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/apps/otp"],
+            "options": {
+                "jestConfig": "apps/otp/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "migrate-latest": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "ts-node --project tsconfig.app.json ../../node_modules/.bin/typeorm migration:run -f .env.local",
+                "cwd": "apps/game-api"
+            }
+        }
+    },
+    "tags": []
+}
